@@ -1,0 +1,6 @@
+<resources>
+    <string name="app_name">News Today</string>
+    <string name="search_title">Search</string>
+    <string name="search_hint">Search news topic</string>
+    <string name="app_label">News App</string>
+</resources>
