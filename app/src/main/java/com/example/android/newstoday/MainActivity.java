@@ -88,7 +88,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         uriBuilder.appendQueryParameter("", searchQuery);
         uriBuilder.appendQueryParameter("order-by", "newest");
-        uriBuilder.appendQueryParameter("api-key=test", "test");
+        uriBuilder.appendQueryParameter("api-key", "test");
 
         return new NewsLoader(this, uriBuilder.toString());
     }
