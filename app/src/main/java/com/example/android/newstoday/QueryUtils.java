@@ -132,18 +132,29 @@ public class QueryUtils {
         // is formatted, a JSONException exception object will be thrown.
         // Catch the exception so the app doesn't crash, and print the error message to the logs.
         try {
+//
+//            // TODO: Parse the response given by the jsonResponse string
+//            // build up a list of Earthquake objects with the corresponding data.
+//            JSONObject root = new JSONObject(jsonResponse);
+//            JSONObject response = root.getJSONObject("response");
+//            JSONArray results = response.getJSONArray("results");
+//            JSONObject newsObject = results.getJSONObject(0);
+//            String webTitle = newsObject.getString("webTitle");
+//            String description = newsObject.getString("description");
+//            String webUrl = newsObject.getString("webUrl");
+            JSONObject news_json_response = new JSONObject(jsonResponse);
+            JSONObject response = news_json_response.getJSONObject("response");
+            JSONArray resultsArray = response.getJSONArray("results");
 
-            // TODO: Parse the response given by the jsonResponse string
-            // build up a list of Earthquake objects with the corresponding data.
-            JSONObject root = new JSONObject(jsonResponse);
-            JSONObject content = root.getJSONObject("content");
-            JSONArray tags = content.getJSONArray("tags");
-            JSONObject newsObject = tags.getJSONObject(0);
-            String webTitle = newsObject.getString("webTitle");
-            String description = newsObject.getString("description");
-            String webUrl = newsObject.getString("webUrl");
+            for (int i = 0; i < resultsArray.length(); i++) {
+                JSONObject ArrayObject = resultsArray.getJSONObject(i);
+                String webTitle = ArrayObject.getString("webTitle");
+//                String description = ArrayObject.getString("description");
+//                String webUrl = ArrayObject.getString("webUrl");
+                newses.add(new News(webTitle, webTitle, webTitle));
+            }
 
-            newses.add(new News(webTitle, description, webUrl));
+          //  newses.add(new News(webTitle, description, webUrl));
         } catch (JSONException e) {
             /*
             If an error is thrown when executing any of the above statements in the "try" block,
