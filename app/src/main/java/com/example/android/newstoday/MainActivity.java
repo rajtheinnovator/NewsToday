@@ -71,14 +71,18 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             the bundle. Pass in this activity for the LoaderCallbacks parameter (which is valid
             because this activity implements the LoaderCallbacks interface).
         */
-                        LoaderManager loaderManager = getLoaderManager();
-                        loaderManager.initLoader(NEWS_LOADER_ID, null, this);
+                        myLoaderManager();
                     } else {
                         // display error
                     }
                 }
             }
         });
+    }
+
+    private void myLoaderManager() {
+        LoaderManager loaderManager = getLoaderManager();
+        loaderManager.initLoader(NEWS_LOADER_ID, null, this);
     }
 
     @Override
@@ -88,7 +92,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         uriBuilder.appendQueryParameter("", searchQuery);
         uriBuilder.appendQueryParameter("order-by", "newest");
-        uriBuilder.appendQueryParameter("api-key", "test");
+        uriBuilder.appendQueryParameter("api-key", "0a397f99-4b95-416f-9c51-34c711f0069a");
 
         return new NewsLoader(this, uriBuilder.toString());
     }

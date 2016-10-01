@@ -133,7 +133,7 @@ public class QueryUtils {
         // Catch the exception so the app doesn't crash, and print the error message to the logs.
         try {
 
-            // TODO: Parse the response given by the jsonResponse string and
+            // TODO: Parse the response given by the jsonResponse string
             // build up a list of Earthquake objects with the corresponding data.
             JSONObject root = new JSONObject(jsonResponse);
             JSONObject content = root.getJSONObject("content");
@@ -150,7 +150,7 @@ public class QueryUtils {
             catch the exception here, so the app doesn't crash. Print a log message
             with the message from the exception.
             */
-            Log.e("QueryUtils", "Problem parsing the earthquake JSON results", e);
+            Log.e("QueryUtils", "Problem parsing the news JSON results", e);
         }
 
         // Return the list of earthquakes
