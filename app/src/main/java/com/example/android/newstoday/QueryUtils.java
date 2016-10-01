@@ -15,6 +15,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
+
 import static com.example.android.newstoday.NewsLoader.LOG_TAG;
 
 /**
@@ -31,7 +32,7 @@ public class QueryUtils {
     }
 
     /**
-     * Query the USGS dataset and return an {@link News} ArrayList to represent a single earthquake.
+     * Query the GUARDIAN dataset and return an {@link News} ArrayList to represent a single news.
      */
     public static ArrayList<News> fetchEarthquakeData(String requestUrl) {
         try {
@@ -125,7 +126,7 @@ public class QueryUtils {
     public static ArrayList<News> extractFeatureFromJson(String jsonResponse) {
 
         // Create an empty ArrayList that we can start adding earthquakes to
-        ArrayList<News> earthquakes = new ArrayList<>();
+        ArrayList<News> newses = new ArrayList<>();
 
         // Try to parse the SAMPLE_JSON_RESPONSE. If there's a problem with the way the JSON
         // is formatted, a JSONException exception object will be thrown.
@@ -135,16 +136,14 @@ public class QueryUtils {
             // TODO: Parse the response given by the jsonResponse string and
             // build up a list of Earthquake objects with the corresponding data.
             JSONObject root = new JSONObject(jsonResponse);
-            JSONArray features = root.getJSONArray("features");
-            for (int i = 0; i < features.length(); i++) {
-                JSONObject earthquake = features.getJSONObject(i);
-                JSONObject properties = earthquake.getJSONObject("properties");
-                Double mag = properties.getDouble("mag");
-                String location = properties.getString("place");
-                Long time = properties.getLong("time");
-                String url = properties.getString("url");
-                earthquakes.add(new News(url, url, url));
-            }
+            JSONObject content = root.getJSONObject("content");
+            JSONArray tags = content.getJSONArray("tags");
+            JSONObject newsObject = tags.getJSONObject(0);
+            String webTitle = newsObject.getString("webTitle");
+            String description = newsObject.getString("description");
+            String webUrl = newsObject.getString("webUrl");
+
+            newses.add(new News(webTitle, description, webUrl));
         } catch (JSONException e) {
             /*
             If an error is thrown when executing any of the above statements in the "try" block,
@@ -155,7 +154,7 @@ public class QueryUtils {
         }
 
         // Return the list of earthquakes
-        return earthquakes;
+        return newses;
     }
 
     /**

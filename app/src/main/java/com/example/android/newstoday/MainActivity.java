@@ -2,7 +2,6 @@ package com.example.android.newstoday;
 
 import android.app.LoaderManager;
 import android.content.Context;
-import android.content.Intent;
 import android.content.Loader;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -11,7 +10,6 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -19,7 +17,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+
 import java.util.ArrayList;
+
 
 import static com.example.android.newstoday.NewsLoader.LOG_TAG;
 
@@ -95,39 +95,15 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onLoadFinished(Loader<ArrayList<News>> loader, ArrayList<News> newses) {
-//        // Hide loading indicator because the data has been loaded
-//        View loadingIndicator = findViewById(R.id.loading_indicator);
-//        loadingIndicator.setVisibility(View.GONE);
-
-        // Clear the adapter of previous earthquake data
-        // earthquakeAdapter.clear();
-        // If there is no result, do nothing.
-        Log.v(LOG_TAG, "You have got a onLoadFinished");
-//        if (earthquakes == null) {
-//            mEmptyStateTextView = (TextView) findViewById(R.id.empty_view);
-//            // Set empty state text to display "No earthquakes found."
-//            mEmptyStateTextView.setText(R.string.no_earthquakes);
-            return;
-        }
 
         // Create a new {@link ArrayAdapter} of earthquakes
-        earthquakeAdapter = new EarthquakeAdapter(EarthquakeActivity.this, earthquakes);
+        NewsAdapter newsAdapter = new NewsAdapter(MainActivity.this, newses);
 
         // Find a reference to the {@link ListView} in the layout
-        earthquakeListView = (ListView) findViewById(R.id.earth_quake_list);
+        ListView news_list_view = (ListView) findViewById(R.id.news_list_view);
         // Set the adapter on the {@link ListView}
         // so the list can be populated in the user interface
-        earthquakeListView.setAdapter(earthquakeAdapter);
-
-        earthquakeListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                Earthquake earthquake = earthquakes.get(position);
-                Intent goToUrl = new Intent(Intent.ACTION_VIEW);
-                goToUrl.setData(Uri.parse(earthquake.getUrl()));
-                startActivity(goToUrl);
-            }
-        });
+        news_list_view.setAdapter(newsAdapter);
     }
 
     @Override

@@ -20,7 +20,6 @@ public class NewsLoader extends AsyncTaskLoader {
      * Query URL
      */
     private String mUrl;
-
     /**
      * Constructs a new {@link NewsLoader}.
      *
