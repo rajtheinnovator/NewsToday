@@ -132,29 +132,25 @@ public class QueryUtils {
         // is formatted, a JSONException exception object will be thrown.
         // Catch the exception so the app doesn't crash, and print the error message to the logs.
         try {
-//
-//            // TODO: Parse the response given by the jsonResponse string
-//            // build up a list of Earthquake objects with the corresponding data.
-//            JSONObject root = new JSONObject(jsonResponse);
-//            JSONObject response = root.getJSONObject("response");
-//            JSONArray results = response.getJSONArray("results");
-//            JSONObject newsObject = results.getJSONObject(0);
-//            String webTitle = newsObject.getString("webTitle");
-//            String description = newsObject.getString("description");
-//            String webUrl = newsObject.getString("webUrl");
+            // TODO: Parse the response given by the jsonResponse string
+
             JSONObject news_json_response = new JSONObject(jsonResponse);
             JSONObject response = news_json_response.getJSONObject("response");
             JSONArray resultsArray = response.getJSONArray("results");
 
             for (int i = 0; i < resultsArray.length(); i++) {
-                JSONObject ArrayObject = resultsArray.getJSONObject(i);
-                String webTitle = ArrayObject.getString("webTitle");
-//                String description = ArrayObject.getString("description");
-//                String webUrl = ArrayObject.getString("webUrl");
-                newses.add(new News(webTitle, webTitle, webTitle));
+                JSONObject resultDetails = resultsArray.getJSONObject(i);
+                String webTitle = resultDetails.getString("webTitle");
+                String newsWebUrl = resultDetails.getString("webUrl");
+                if (resultDetails.has("tags")) {
+                    JSONArray tagsArray = resultDetails.getJSONArray("tags");
+                    JSONObject tagsDetails = tagsArray.getJSONObject(0);
+                    if (tagsDetails.has("webTitle")) {
+                        String authorTitle = tagsDetails.getString("webTitle");
+                        newses.add(new News(webTitle, authorTitle, newsWebUrl));
+                    }
+                }
             }
-
-          //  newses.add(new News(webTitle, description, webUrl));
         } catch (JSONException e) {
             /*
             If an error is thrown when executing any of the above statements in the "try" block,
@@ -164,7 +160,7 @@ public class QueryUtils {
             Log.e("QueryUtils", "Problem parsing the news JSON results", e);
         }
 
-        // Return the list of earthquakes
+        // Return the list of newses
         return newses;
     }
 

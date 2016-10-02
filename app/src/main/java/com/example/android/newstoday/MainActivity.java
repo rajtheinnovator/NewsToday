@@ -2,6 +2,7 @@ package com.example.android.newstoday;
 
 import android.app.LoaderManager;
 import android.content.Context;
+import android.content.Intent;
 import android.content.Loader;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
@@ -10,6 +11,7 @@ import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -24,7 +26,7 @@ import java.util.ArrayList;
 import static com.example.android.newstoday.NewsLoader.LOG_TAG;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<ArrayList<News>> {
-    private static final String GUARDIAN_API_URL = "http://content.guardianapis.com/search?q=";
+    private static final String GUARDIAN_API_URL = "http://content.guardianapis.com/search?";
     private static final int NEWS_LOADER_ID = 1;
     String searchQuery;
     // display error
@@ -90,15 +92,17 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         Uri baseUri = Uri.parse(GUARDIAN_API_URL);
         Uri.Builder uriBuilder = baseUri.buildUpon();
 
-        uriBuilder.appendQueryParameter("", searchQuery);
+        uriBuilder.appendQueryParameter("q", searchQuery);
         uriBuilder.appendQueryParameter("order-by", "newest");
         uriBuilder.appendQueryParameter("api-key", "0a397f99-4b95-416f-9c51-34c711f0069a");
+        uriBuilder.appendQueryParameter("show-tags", "contributor");
+        Log.v(LOG_TAG, "Value of Uri is :" + uriBuilder);
 
         return new NewsLoader(this, uriBuilder.toString());
     }
 
     @Override
-    public void onLoadFinished(Loader<ArrayList<News>> loader, ArrayList<News> newses) {
+    public void onLoadFinished(Loader<ArrayList<News>> loader, final ArrayList<News> newses) {
 
         // Create a new {@link ArrayAdapter} of earthquakes
         NewsAdapter newsAdapter = new NewsAdapter(MainActivity.this, newses);
@@ -108,6 +112,16 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         // Set the adapter on the {@link ListView}
         // so the list can be populated in the user interface
         news_list_view.setAdapter(newsAdapter);
+
+        news_list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                News news = newses.get(position);
+                Intent goToUrl = new Intent(Intent.ACTION_VIEW);
+                goToUrl.setData(Uri.parse(news.getWebUrl()));
+                startActivity(goToUrl);
+            }
+        });
     }
 
     @Override

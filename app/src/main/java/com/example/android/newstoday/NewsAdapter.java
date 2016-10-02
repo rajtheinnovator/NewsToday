@@ -43,7 +43,7 @@ public class NewsAdapter extends ArrayAdapter<News> {
             viewHolder = (ViewHolder) convertView.getTag();
         }
         String newsTitle = currentNews.getTitle();
-        String newsDescription = currentNews.getDescription();
+        String newsDescription = currentNews.getNewsAuthor();
         String newsUrl = currentNews.getWebUrl();
 
         viewHolder.newsTitle.setText(newsTitle);
