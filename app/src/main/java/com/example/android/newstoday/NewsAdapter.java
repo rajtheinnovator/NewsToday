@@ -19,6 +19,7 @@ public class NewsAdapter extends ArrayAdapter<News> {
         TextView newsTitle;
         TextView newsDescription;
         TextView newsUrl;
+
     }
 
     public NewsAdapter(Context context, ArrayList<News> newsDetails) {
