@@ -23,6 +23,10 @@ import static com.example.android.newstoday.NewsLoader.LOG_TAG;
  */
 
 public class QueryUtils {
+    private static String webTitle;
+    private static String newsWebUrl;
+    private static String authorTitle;
+
     /**
      * Create a private constructor because no one should ever create a {@link QueryUtils} object.
      * This class is only meant to hold static variables and methods, which can be accessed
@@ -135,19 +139,28 @@ public class QueryUtils {
             // TODO: Parse the response given by the jsonResponse string
 
             JSONObject news_json_response = new JSONObject(jsonResponse);
-            JSONObject response = news_json_response.getJSONObject("response");
-            JSONArray resultsArray = response.getJSONArray("results");
+            if (news_json_response.has("response")) {
+                JSONObject response = news_json_response.getJSONObject("response");
+                if (response.has("results")) {
+                    JSONArray resultsArray = response.getJSONArray("results");
 
-            for (int i = 0; i < resultsArray.length(); i++) {
-                JSONObject resultDetails = resultsArray.getJSONObject(i);
-                String webTitle = resultDetails.getString("webTitle");
-                String newsWebUrl = resultDetails.getString("webUrl");
-                if (resultDetails.has("tags")) {
-                    JSONArray tagsArray = resultDetails.getJSONArray("tags");
-                    JSONObject tagsDetails = tagsArray.getJSONObject(0);
-                    if (tagsDetails.has("webTitle")) {
-                        String authorTitle = tagsDetails.getString("webTitle");
-                        newses.add(new News(webTitle, authorTitle, newsWebUrl));
+
+                    for (int i = 0; i < resultsArray.length(); i++) {
+                        JSONObject resultDetails = resultsArray.getJSONObject(i);
+                        if (resultDetails.has("webTitle")) {
+                            webTitle = resultDetails.getString("webTitle");
+                        }
+                        if (resultDetails.has("webUrl")) {
+                            newsWebUrl = resultDetails.getString("webUrl");
+                        }
+                        if (resultDetails.has("tags")) {
+                            JSONArray tagsArray = resultDetails.getJSONArray("tags");
+                            JSONObject tagsDetails = tagsArray.getJSONObject(0);
+                            if (tagsDetails.has("webTitle")) {
+                                authorTitle = tagsDetails.getString("webTitle");
+                                newses.add(new News(webTitle, authorTitle, newsWebUrl));
+                            }
+                        }
                     }
                 }
             }

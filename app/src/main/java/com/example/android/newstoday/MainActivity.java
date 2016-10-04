@@ -61,6 +61,47 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 }
             }
         });
+        //setting button click after first search
+        Button searchButtonAfterFirstSearch = (Button) findViewById(R.id.buttonAfterSearch);
+        //Set click Listener on Search Button Click
+        searchButtonAfterFirstSearch.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                //Find the edit text's actual text and make it compatible for a url search query
+                String searchQueried = ((EditText) findViewById(R.id.editTextAfterClick)).getText().toString();
+
+                //Check if user input is empty or it contains some query text
+                if (searchQueried.isEmpty()) {
+                    Context context = getApplicationContext();
+                    String text = "Nothing Entered in Search";
+                    int duration = Toast.LENGTH_SHORT;
+                    Toast toast = Toast.makeText(context, text, duration);
+                    toast.show();
+                } else {
+                    //Handle the loader manager as per the the button and view selected
+                    TextView searchQueriedFor = (TextView) findViewById(R.id.searchQueriedFor);
+                    searchQueriedFor.setText(searchQueried);
+                    searchQuery = searchQueried.replace(" ", "%20");
+                    //First of all check if network is connected or not then only start the laoder
+                    ConnectivityManager connMgr = (ConnectivityManager)
+                            getSystemService(Context.CONNECTIVITY_SERVICE);
+                    NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+                    if (networkInfo != null && networkInfo.isConnected()) {
+            /*
+            fetch data
+            Get a reference to the LoaderManager, in order to interact with loaders.
+            And, Initialize the loader. Pass in the int ID constant defined above and pass in null for
+            the bundle. Pass in this activity for the LoaderCallbacks parameter (which is valid
+            because this activity implements the LoaderCallbacks interface).
+        */
+                        reStartLoaderManager();
+
+                    } else {
+                        // display error
+                    }
+                }
+            }
+        });
     }
 
     private void clickHandle(String searchQueried) {
@@ -79,15 +120,19 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             the bundle. Pass in this activity for the LoaderCallbacks parameter (which is valid
             because this activity implements the LoaderCallbacks interface).
         */
-            myLoaderManager();
+            startLoaderManager();
+
         } else {
             // display error
         }
     }
-
-    private void myLoaderManager() {
+    private void startLoaderManager(){
         LoaderManager loaderManager = getLoaderManager();
         loaderManager.initLoader(NEWS_LOADER_ID, null, this);
+    }
+    private void reStartLoaderManager(){
+        LoaderManager loaderManager = getLoaderManager();
+        loaderManager.restartLoader(NEWS_LOADER_ID, null, this);
     }
 
     @Override
@@ -100,14 +145,14 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         uriBuilder.appendQueryParameter("api-key", "0a397f99-4b95-416f-9c51-34c711f0069a");
         uriBuilder.appendQueryParameter("show-tags", "contributor");
         Log.v(LOG_TAG, "Value of Uri is :" + uriBuilder);
-
+        searchQuery = null;
         return new NewsLoader(this, uriBuilder.toString());
     }
 
     @Override
     public void onLoadFinished(Loader<ArrayList<News>> loader, final ArrayList<News> newses) {
 
-        // Create a new {@link ArrayAdapter} ofnews
+        // Create a new {@link ArrayAdapter} of news
         NewsAdapter newsAdapter = new NewsAdapter(MainActivity.this, newses);
 
         // Find a reference to the {@link ListView} in the layout
