@@ -104,6 +104,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
             if (SEARCH_BEFORE_OR_AFTER_FIRST_CLICK == 1) {
                 startLoaderManager();
             } else {
+                View loadingIndicator = findViewById(R.id.loading_indicator);
+                loadingIndicator.setVisibility(View.VISIBLE);
                 reStartLoaderManager();
             }
 
@@ -114,14 +116,19 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     private void setEmptyView() {
-        mEmptyStateTextView = (TextView) findViewById(R.id.empty_view);
+        // Otherwise, display error
+        // First, hide loading indicator so error message will be visible
+        View loadingIndicator = findViewById(R.id.loading_indicator);
+        loadingIndicator.setVisibility(View.GONE);
+
+        // Update empty state with no connection error message
+        mEmptyStateTextView.setText(R.string.no_internet);
+
+
         // Find a reference to the {@link ListView} in the layout
         newsListView = (ListView) findViewById(R.id.news_list_view);
         newsListView.setEmptyView(mEmptyStateTextView);
-        mEmptyStateTextView.setText(R.string.no_internet);
-        // Hide loading indicator because the data has been loaded
-        View loadingIndicator = findViewById(R.id.loading_indicator);
-        loadingIndicator.setVisibility(View.GONE);
+
     }
 
 
@@ -164,12 +171,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         // earthquakeAdapter.clear();
         // If there is no result, do nothing.
         Log.v(LOG_TAG, "You have got a onLoadFinished");
-        if (newses == null) {
-            mEmptyStateTextView = (TextView) findViewById(R.id.empty_view);
-            // Set empty state text to display "No earthquakes found."
-            mEmptyStateTextView.setText(R.string.no_news);
-            return;
-        }
+        mEmptyStateTextView = (TextView) findViewById(R.id.empty_view);
+        // Set empty state text to display "No earthquakes found."
+        mEmptyStateTextView.setText(R.string.no_news);
 
         // Create a new {@link ArrayAdapter} of news
         newsAdapter = new NewsAdapter(MainActivity.this, newses);
@@ -194,5 +198,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public void onLoaderReset(Loader<ArrayList<News>> loader) {
         newsAdapter.clear();
+        newsListView.setVisibility(View.GONE);
     }
 }
