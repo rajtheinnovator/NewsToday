@@ -27,6 +27,8 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     private static final String GUARDIAN_API_URL = "http://content.guardianapis.com/search?";
     private static final int NEWS_LOADER_ID = 1;
     String searchQuery;
+    ListView newsListView;
+    TextView mEmptyStateTextView;
     // display error
     //  TextView mEmptyStateTextView = (TextView) findViewById(R.id.empty_view);
 
@@ -87,21 +89,27 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                             getSystemService(Context.CONNECTIVITY_SERVICE);
                     NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
                     if (networkInfo != null && networkInfo.isConnected()) {
-            /*
-            fetch data
-            Get a reference to the LoaderManager, in order to interact with loaders.
-            And, Initialize the loader. Pass in the int ID constant defined above and pass in null for
-            the bundle. Pass in this activity for the LoaderCallbacks parameter (which is valid
-            because this activity implements the LoaderCallbacks interface).
-        */
+                /* fetch data. Get a reference to the LoaderManager, in order to interact with loaders. */
                         reStartLoaderManager();
 
                     } else {
                         // display error
+                        setEmptyView();
                     }
                 }
             }
         });
+    }
+
+    private void setEmptyView() {
+        mEmptyStateTextView = (TextView) findViewById(R.id.empty_view);
+        // Find a reference to the {@link ListView} in the layout
+        newsListView = (ListView) findViewById(R.id.news_list_view);
+        newsListView.setEmptyView(mEmptyStateTextView);
+        mEmptyStateTextView.setText(R.string.no_internet);
+        // Hide loading indicator because the data has been loaded
+        View loadingIndicator = findViewById(R.id.loading_indicator);
+        loadingIndicator.setVisibility(View.GONE);
     }
 
     private void clickHandle(String searchQueried) {
@@ -113,24 +121,21 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
-            /*
-            fetch data
-            Get a reference to the LoaderManager, in order to interact with loaders.
-            And, Initialize the loader. Pass in the int ID constant defined above and pass in null for
-            the bundle. Pass in this activity for the LoaderCallbacks parameter (which is valid
-            because this activity implements the LoaderCallbacks interface).
-        */
+          /* fetch data. Get a reference to the LoaderManager, in order to interact with loaders. */
             startLoaderManager();
 
         } else {
             // display error
+            setEmptyView();
         }
     }
-    private void startLoaderManager(){
+
+    private void startLoaderManager() {
         LoaderManager loaderManager = getLoaderManager();
         loaderManager.initLoader(NEWS_LOADER_ID, null, this);
     }
-    private void reStartLoaderManager(){
+
+    private void reStartLoaderManager() {
         LoaderManager loaderManager = getLoaderManager();
         loaderManager.restartLoader(NEWS_LOADER_ID, null, this);
     }
@@ -145,12 +150,31 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         uriBuilder.appendQueryParameter("api-key", "0a397f99-4b95-416f-9c51-34c711f0069a");
         uriBuilder.appendQueryParameter("show-tags", "contributor");
         Log.v(LOG_TAG, "Value of Uri is :" + uriBuilder);
-        searchQuery = null;
+
         return new NewsLoader(this, uriBuilder.toString());
     }
 
     @Override
     public void onLoadFinished(Loader<ArrayList<News>> loader, final ArrayList<News> newses) {
+        /* Clear the search box*/
+        EditText editText = (EditText) findViewById(R.id.editTextAfterClick);
+        EditText editText1 = (EditText) findViewById(R.id.editTextBeforeClick);
+        editText.setText("");
+        editText1.setText("");
+        // Hide loading indicator because the data has been loaded
+        View loadingIndicator = findViewById(R.id.loading_indicator);
+        loadingIndicator.setVisibility(View.GONE);
+
+        // Clear the adapter of previous earthquake data
+        // earthquakeAdapter.clear();
+        // If there is no result, do nothing.
+        Log.v(LOG_TAG, "You have got a onLoadFinished");
+        if (newses == null) {
+            mEmptyStateTextView = (TextView) findViewById(R.id.empty_view);
+            // Set empty state text to display "No earthquakes found."
+            mEmptyStateTextView.setText(R.string.no_news);
+            return;
+        }
 
         // Create a new {@link ArrayAdapter} of news
         NewsAdapter newsAdapter = new NewsAdapter(MainActivity.this, newses);

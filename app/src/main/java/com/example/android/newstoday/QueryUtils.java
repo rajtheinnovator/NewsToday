@@ -155,10 +155,12 @@ public class QueryUtils {
                         }
                         if (resultDetails.has("tags")) {
                             JSONArray tagsArray = resultDetails.getJSONArray("tags");
-                            JSONObject tagsDetails = tagsArray.getJSONObject(0);
-                            if (tagsDetails.has("webTitle")) {
-                                authorTitle = tagsDetails.getString("webTitle");
-                                newses.add(new News(webTitle, authorTitle, newsWebUrl));
+                            if (tagsArray.length() > 0) {
+                                JSONObject tagsDetails = tagsArray.getJSONObject(0);
+                                if (tagsDetails.has("webTitle")) {
+                                    authorTitle = tagsDetails.getString("webTitle");
+                                    newses.add(new News(webTitle, authorTitle, newsWebUrl));
+                                }
                             }
                         }
                     }

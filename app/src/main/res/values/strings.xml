@@ -6,4 +6,5 @@
     <string name="app_label">News App</string>
     <string name="no_internet">No Internet Connection Available</string>
     <string name="search_you_queried_for">You queried for: </string>
+    <string name="no_news">No news for now. Try again after some time.</string>
 </resources>
