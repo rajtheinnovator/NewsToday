@@ -34,7 +34,7 @@ public class QueryUtils {
     /**
      * Query the GUARDIAN dataset and return an {@link News} ArrayList to represent a single news.
      */
-    public static ArrayList<News> fetchEarthquakeData(String requestUrl) {
+    public static ArrayList<News> fetchNewsData(String requestUrl) {
         try {
             Thread.sleep(2000);
         } catch (InterruptedException e) {
@@ -52,10 +52,10 @@ public class QueryUtils {
         }
 
         // Extract relevant fields from the JSON response and create an {@link Event} object
-        ArrayList<News> earthquake = extractFeatureFromJson(jsonResponse);
+        ArrayList<News> newses = extractFeatureFromJson(jsonResponse);
 
         // Return the {@link Event}
-        return earthquake;
+        return newses;
     }
 
     /**
@@ -89,7 +89,7 @@ public class QueryUtils {
                 Log.e(LOG_TAG, "Error response code: " + urlConnection.getResponseCode());
             }
         } catch (IOException e) {
-            Log.e(LOG_TAG, "Problem retrieving the earthquake JSON results.", e);
+            Log.e(LOG_TAG, "Problem retrieving the newses JSON results.", e);
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
@@ -125,7 +125,7 @@ public class QueryUtils {
      */
     public static ArrayList<News> extractFeatureFromJson(String jsonResponse) {
 
-        // Create an empty ArrayList that we can start adding earthquakes to
+        // Create an empty ArrayList that we can start adding newses to
         ArrayList<News> newses = new ArrayList<>();
 
         // Try to parse the SAMPLE_JSON_RESPONSE. If there's a problem with the way the JSON

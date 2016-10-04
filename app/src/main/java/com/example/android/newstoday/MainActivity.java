@@ -61,31 +61,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 }
             }
         });
-        /*
-        Handle the Button click after result has been fetched after the sfirst click, with the
-        layout that was present on app start
-         */
-        Button searchButtonAfterFirstSearch = (Button) findViewById(R.id.buttonAfterSearch);
-        //Set click Listener on Search Button Click
-        searchButtonAfterFirstSearch.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                //Find the edit text's actual text and make it compatible for a url search query
-                String searchQueried = ((EditText) findViewById(R.id.editTextAfterClick)).getText().toString();
-
-                //Check if user input is empty or it contains some query text
-                if (searchQueried.isEmpty()) {
-                    Context context = getApplicationContext();
-                    String text = "Nothing Entered in Search";
-                    int duration = Toast.LENGTH_SHORT;
-                    Toast toast = Toast.makeText(context, text, duration);
-                    toast.show();
-                } else {
-                    //Handle the loader manager as per the the button and view selected
-                    clickHandle(searchQueried);
-                }
-            }
-        });
     }
 
     private void clickHandle(String searchQueried) {
@@ -132,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     @Override
     public void onLoadFinished(Loader<ArrayList<News>> loader, final ArrayList<News> newses) {
 
-        // Create a new {@link ArrayAdapter} of earthquakes
+        // Create a new {@link ArrayAdapter} ofnews
         NewsAdapter newsAdapter = new NewsAdapter(MainActivity.this, newses);
 
         // Find a reference to the {@link ListView} in the layout

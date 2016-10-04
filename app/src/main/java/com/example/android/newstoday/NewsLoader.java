@@ -28,7 +28,7 @@ public class NewsLoader extends AsyncTaskLoader {
      */
     public NewsLoader(Context context, String url) {
         super(context);
-        Log.v(LOG_TAG, "You have got a Earthquake Loader");
+        Log.v(LOG_TAG, "You have got a News Loader");
         mUrl = url;
     }
 
@@ -47,8 +47,8 @@ public class NewsLoader extends AsyncTaskLoader {
             return null;
         }
         Log.v(LOG_TAG, "You have got a loadInBackground");
-        // Perform the network request, parse the response, and extract a list of earthquakes.
-        List<News> earthquakes = QueryUtils.fetchEarthquakeData(mUrl);
-        return earthquakes;
+        // Perform the network request, parse the response, and extract a list of news.
+        List<News> news = QueryUtils.fetchNewsData(mUrl);
+        return news;
     }
 }
