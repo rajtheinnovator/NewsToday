@@ -29,6 +29,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     String searchQuery;
     ListView newsListView;
     TextView mEmptyStateTextView;
+    NewsAdapter newsAdapter;
     // display error
     //  TextView mEmptyStateTextView = (TextView) findViewById(R.id.empty_view);
 
@@ -48,18 +49,17 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
                 //Check if user input is empty or it contains some query text
                 if (searchQueried.isEmpty()) {
-                    Context context = getApplicationContext();
-                    String text = "Nothing Entered in Search";
-                    int duration = Toast.LENGTH_SHORT;
-                    Toast toast = Toast.makeText(context, text, duration);
-                    toast.show();
+                    searchQueriedIsEmpty();
                 } else {
                     LinearLayout searchBoxBeforeClick = (LinearLayout) findViewById(R.id.searchBoxBeforeClick);
                     searchBoxBeforeClick.setVisibility(View.GONE);
                     LinearLayout searchBoxAfterClick = (LinearLayout) findViewById(R.id.searchBoxAfterClick);
                     searchBoxAfterClick.setVisibility(View.VISIBLE);
+                    EditText editTextAfterClick = (EditText) findViewById(R.id.editTextAfterClick);
+                    editTextAfterClick.setText(searchQueried);
+                    int SEARCH_BEFORE_OR_AFTER_FIRST_CLICK = 1;
                     //Handle the loader manager as per the the button and view selected
-                    clickHandle(searchQueried);
+                    clickHandle(searchQueried, SEARCH_BEFORE_OR_AFTER_FIRST_CLICK);
                 }
             }
         });
@@ -74,31 +74,43 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
                 //Check if user input is empty or it contains some query text
                 if (searchQueried.isEmpty()) {
-                    Context context = getApplicationContext();
-                    String text = "Nothing Entered in Search";
-                    int duration = Toast.LENGTH_SHORT;
-                    Toast toast = Toast.makeText(context, text, duration);
-                    toast.show();
+                    searchQueriedIsEmpty();
                 } else {
-                    //Handle the loader manager as per the the button and view selected
-                    TextView searchQueriedFor = (TextView) findViewById(R.id.searchQueriedFor);
-                    searchQueriedFor.setText(searchQueried);
-                    searchQuery = searchQueried.replace(" ", "%20");
-                    //First of all check if network is connected or not then only start the laoder
-                    ConnectivityManager connMgr = (ConnectivityManager)
-                            getSystemService(Context.CONNECTIVITY_SERVICE);
-                    NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-                    if (networkInfo != null && networkInfo.isConnected()) {
-                /* fetch data. Get a reference to the LoaderManager, in order to interact with loaders. */
-                        reStartLoaderManager();
-
-                    } else {
-                        // display error
-                        setEmptyView();
-                    }
+                    int SEARCH_BEFORE_OR_AFTER_FIRST_CLICK = 2;
+                    clickHandle(searchQueried, SEARCH_BEFORE_OR_AFTER_FIRST_CLICK);
                 }
             }
         });
+    }
+
+    private void searchQueriedIsEmpty() {
+        Context context = getApplicationContext();
+        String text = "Nothing Entered in Search";
+        int duration = Toast.LENGTH_SHORT;
+        Toast toast = Toast.makeText(context, text, duration);
+        toast.show();
+    }
+
+    private void clickHandle(String searchQueried, int SEARCH_BEFORE_OR_AFTER_FIRST_CLICK) {
+        TextView searchQueriedFor = (TextView) findViewById(R.id.searchQueriedFor);
+        searchQueriedFor.setText(searchQueried);
+        searchQuery = searchQueried.replace(" ", "%20");
+        //First of all check if network is connected or not then only start the laoder
+        ConnectivityManager connMgr = (ConnectivityManager)
+                getSystemService(Context.CONNECTIVITY_SERVICE);
+        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
+        if (networkInfo != null && networkInfo.isConnected()) {
+          /* fetch data. Get a reference to the LoaderManager, in order to interact with loaders. */
+            if (SEARCH_BEFORE_OR_AFTER_FIRST_CLICK == 1) {
+                startLoaderManager();
+            } else {
+                reStartLoaderManager();
+            }
+
+        } else {
+            // display error
+            setEmptyView();
+        }
     }
 
     private void setEmptyView() {
@@ -112,23 +124,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         loadingIndicator.setVisibility(View.GONE);
     }
 
-    private void clickHandle(String searchQueried) {
-        TextView searchQueriedFor = (TextView) findViewById(R.id.searchQueriedFor);
-        searchQueriedFor.setText(searchQueried);
-        searchQuery = searchQueried.replace(" ", "%20");
-        //First of all check if network is connected or not then only start the laoder
-        ConnectivityManager connMgr = (ConnectivityManager)
-                getSystemService(Context.CONNECTIVITY_SERVICE);
-        NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
-        if (networkInfo != null && networkInfo.isConnected()) {
-          /* fetch data. Get a reference to the LoaderManager, in order to interact with loaders. */
-            startLoaderManager();
-
-        } else {
-            // display error
-            setEmptyView();
-        }
-    }
 
     private void startLoaderManager() {
         LoaderManager loaderManager = getLoaderManager();
@@ -177,7 +172,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         }
 
         // Create a new {@link ArrayAdapter} of news
-        NewsAdapter newsAdapter = new NewsAdapter(MainActivity.this, newses);
+        newsAdapter = new NewsAdapter(MainActivity.this, newses);
 
         // Find a reference to the {@link ListView} in the layout
         ListView news_list_view = (ListView) findViewById(R.id.news_list_view);
@@ -198,6 +193,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
     @Override
     public void onLoaderReset(Loader<ArrayList<News>> loader) {
-
+        newsAdapter.clear();
     }
 }
