@@ -22,7 +22,6 @@ import android.widget.Toast;
 import java.util.ArrayList;
 
 import static com.example.android.newstoday.NewsLoader.LOG_TAG;
-import static com.example.android.newstoday.R.id.news_list_view;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<ArrayList<News>> {
     private static final String GUARDIAN_API_URL = "http://content.guardianapis.com/search?";
@@ -62,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                     //Handle the loader manager as per the the button and view selected
                     clickHandle(searchQueried, SEARCH_BEFORE_OR_AFTER_FIRST_CLICK);
                 }
+
             }
         });
         //setting button click after first search
@@ -117,28 +117,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     }
 
     private void setEmptyView() {
-        // Otherwise, display error
-//        // First, hide loading indicator so error message will be visible
-//        View loadingIndicator = findViewById(R.id.loading_indicator);
-//        loadingIndicator.setVisibility(View.GONE);
-//
-//        // Update empty state with no connection error message
-//        mEmptyStateTextView.setText(R.string.no_internet);
-//        // Find a reference to the {@link ListView} in the layout
-//        newsListView = (ListView) findViewById(R.id.news_list_view);
-//        newsListView.setEmptyView(mEmptyStateTextView);
 
-
-        // display error
-        mEmptyStateTextView = (TextView) findViewById(R.id.empty_view);
-        // Find a reference to the {@link ListView} in the layout
-        newsListView = (ListView) findViewById(news_list_view);
-        newsListView.setEmptyView(mEmptyStateTextView);
-        mEmptyStateTextView.setText(R.string.no_internet);
         // Hide loading indicator because the data has been loaded
         View loadingIndicator = findViewById(R.id.loading_indicator);
         loadingIndicator.setVisibility(View.GONE);
-
+        // display error
+        mEmptyStateTextView = (TextView) findViewById(R.id.empty_view);
+        mEmptyStateTextView.setText(R.string.no_internet);
     }
 
 
