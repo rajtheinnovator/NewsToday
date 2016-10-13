@@ -2,7 +2,6 @@ package com.example.android.newstoday;
 
 import android.content.AsyncTaskLoader;
 import android.content.Context;
-import android.util.Log;
 
 import java.util.List;
 
@@ -11,15 +10,12 @@ import java.util.List;
  */
 
 public class NewsLoader extends AsyncTaskLoader {
-    /**
-     * Tag for log messages
-     */
-    public static final String LOG_TAG = NewsLoader.class.getName();
 
     /**
      * Query URL
      */
     private String mUrl;
+
     /**
      * Constructs a new {@link NewsLoader}.
      *
@@ -28,13 +24,11 @@ public class NewsLoader extends AsyncTaskLoader {
      */
     public NewsLoader(Context context, String url) {
         super(context);
-        Log.v(LOG_TAG, "You have got a News Loader");
         mUrl = url;
     }
 
     @Override
     protected void onStartLoading() {
-        Log.v(LOG_TAG, "You have got a ForcedLoader");
         forceLoad();
     }
 
@@ -46,7 +40,7 @@ public class NewsLoader extends AsyncTaskLoader {
         if (mUrl == null) {
             return null;
         }
-        Log.v(LOG_TAG, "You have got a loadInBackground");
+
         // Perform the network request, parse the response, and extract a list of news.
         List<News> news = QueryUtils.fetchNewsData(mUrl);
         return news;

@@ -9,7 +9,6 @@ import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -20,8 +19,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-
-import static com.example.android.newstoday.NewsLoader.LOG_TAG;
 
 public class MainActivity extends AppCompatActivity implements LoaderManager.LoaderCallbacks<ArrayList<News>> {
     private static final String GUARDIAN_API_URL = "http://content.guardianapis.com/search?";
@@ -37,9 +34,12 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //setting the view of the launch screen
         LinearLayout linearLayout = (LinearLayout) findViewById(R.id.searchBoxAfterClick);
         linearLayout.setVisibility(View.GONE);
         Button searchButtonBeforeFirstSearch = (Button) findViewById(R.id.buttonBeforeSearch);
+
         //Set click Listener on Search Button Click
         searchButtonBeforeFirstSearch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -51,12 +51,15 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 if (searchQueried.isEmpty()) {
                     searchQueriedIsEmpty();
                 } else {
+                    //setting the view of the launch screen
                     LinearLayout searchBoxBeforeClick = (LinearLayout) findViewById(R.id.searchBoxBeforeClick);
                     searchBoxBeforeClick.setVisibility(View.GONE);
                     LinearLayout searchBoxAfterClick = (LinearLayout) findViewById(R.id.searchBoxAfterClick);
                     searchBoxAfterClick.setVisibility(View.VISIBLE);
                     EditText editTextAfterClick = (EditText) findViewById(R.id.editTextAfterClick);
                     editTextAfterClick.setText(searchQueried);
+
+                    //know what was the status of the app, i.e, was it the first click or not
                     int SEARCH_BEFORE_OR_AFTER_FIRST_CLICK = 1;
                     //Handle the loader manager as per the the button and view selected
                     clickHandle(searchQueried, SEARCH_BEFORE_OR_AFTER_FIRST_CLICK);
@@ -64,8 +67,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
             }
         });
+
         //setting button click after first search
         Button searchButtonAfterFirstSearch = (Button) findViewById(R.id.buttonAfterSearch);
+
         //Set click Listener on Search Button Click
         searchButtonAfterFirstSearch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,6 +82,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
                 if (searchQueried.isEmpty()) {
                     searchQueriedIsEmpty();
                 } else {
+                    //know what was the status of the app, i.e, was it the second or later click or not
                     int SEARCH_BEFORE_OR_AFTER_FIRST_CLICK = 2;
                     clickHandle(searchQueried, SEARCH_BEFORE_OR_AFTER_FIRST_CLICK);
                 }
@@ -96,11 +102,13 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         TextView searchQueriedFor = (TextView) findViewById(R.id.searchQueriedFor);
         searchQueriedFor.setText(searchQueried);
         searchQuery = searchQueried.replace(" ", "%20");
+
         //First of all check if network is connected or not then only start the laoder
         ConnectivityManager connMgr = (ConnectivityManager)
                 getSystemService(Context.CONNECTIVITY_SERVICE);
         NetworkInfo networkInfo = connMgr.getActiveNetworkInfo();
         if (networkInfo != null && networkInfo.isConnected()) {
+
           /* fetch data. Get a reference to the LoaderManager, in order to interact with loaders. */
             if (SEARCH_BEFORE_OR_AFTER_FIRST_CLICK == 1) {
                 startLoaderManager();
@@ -146,7 +154,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         uriBuilder.appendQueryParameter("order-by", "newest");
         uriBuilder.appendQueryParameter("api-key", "0a397f99-4b95-416f-9c51-34c711f0069a");
         uriBuilder.appendQueryParameter("show-tags", "contributor");
-        Log.v(LOG_TAG, "Value of Uri is :" + uriBuilder);
 
         return new NewsLoader(this, uriBuilder.toString());
     }
@@ -165,7 +172,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         // Clear the adapter of previous earthquake data
         // earthquakeAdapter.clear();
         // If there is no result, do nothing.
-        Log.v(LOG_TAG, "You have got a onLoadFinished");
+
         if (newses.isEmpty()) {
             mEmptyStateTextView = (TextView) findViewById(R.id.empty_view);
             mEmptyStateTextView.setText(R.string.no_news);
@@ -176,8 +183,10 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         // Find a reference to the {@link ListView} in the layout
         ListView news_list_view = (ListView) findViewById(R.id.news_list_view);
-        // Set the adapter on the {@link ListView}
-        // so the list can be populated in the user interface
+        /*
+        Set the adapter on the {@link ListView}
+        so the list can be populated in the user interface
+        */
         news_list_view.setAdapter(newsAdapter);
 
         news_list_view.setOnItemClickListener(new AdapterView.OnItemClickListener() {

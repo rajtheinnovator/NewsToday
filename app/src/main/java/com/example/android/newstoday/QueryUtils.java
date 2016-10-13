@@ -1,7 +1,5 @@
 package com.example.android.newstoday;
 
-import android.util.Log;
-
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,8 +13,6 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.nio.charset.Charset;
 import java.util.ArrayList;
-
-import static com.example.android.newstoday.NewsLoader.LOG_TAG;
 
 /**
  * Created by ABHISHEK RAJ on 10/1/2016.
@@ -52,7 +48,7 @@ public class QueryUtils {
         try {
             jsonResponse = makeHttpRequest(url);
         } catch (IOException e) {
-            Log.e(LOG_TAG, "Error closing input stream", e);
+            //handle exception
         }
 
         // Extract relevant fields from the JSON response and create an {@link Event} object
@@ -90,10 +86,10 @@ public class QueryUtils {
                 inputStream = urlConnection.getInputStream();
                 jsonResponse = readFromStream(inputStream);
             } else {
-                Log.e(LOG_TAG, "Error response code: " + urlConnection.getResponseCode());
+                //handle exception
             }
         } catch (IOException e) {
-            Log.e(LOG_TAG, "Problem retrieving the newses JSON results.", e);
+            //handle exception
         } finally {
             if (urlConnection != null) {
                 urlConnection.disconnect();
@@ -134,7 +130,7 @@ public class QueryUtils {
 
         // Try to parse the SAMPLE_JSON_RESPONSE. If there's a problem with the way the JSON
         // is formatted, a JSONException exception object will be thrown.
-        // Catch the exception so the app doesn't crash, and print the error message to the logs.
+        // Catch the exception so the app doesn't crash, and handle exception.
         try {
             // TODO: Parse the response given by the jsonResponse string
 
@@ -167,12 +163,7 @@ public class QueryUtils {
                 }
             }
         } catch (JSONException e) {
-            /*
-            If an error is thrown when executing any of the above statements in the "try" block,
-            catch the exception here, so the app doesn't crash. Print a log message
-            with the message from the exception.
-            */
-            Log.e("QueryUtils", "Problem parsing the news JSON results", e);
+            //handle exception
         }
 
         // Return the list of newses
@@ -187,7 +178,7 @@ public class QueryUtils {
         try {
             url = new URL(stringUrl);
         } catch (MalformedURLException e) {
-            Log.e(LOG_TAG, "Error with creating URL ", e);
+            //handle exception
         }
         return url;
     }

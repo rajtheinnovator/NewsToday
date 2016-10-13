@@ -29,6 +29,7 @@ public class NewsAdapter extends ArrayAdapter<News> {
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
         News currentNews = getItem(position);
+
         // Check if an existing view is being reused, otherwise inflate the view
         ViewHolder viewHolder; // view lookup cache stored in tag
         if (convertView == null) {
@@ -38,6 +39,7 @@ public class NewsAdapter extends ArrayAdapter<News> {
             viewHolder.newsTitle = (TextView) convertView.findViewById(R.id.news_title);
             viewHolder.newsDescription = (TextView) convertView.findViewById(R.id.news_description);
             viewHolder.newsUrl = (TextView) convertView.findViewById(R.id.news_url);
+
             // Cache the viewHolder object inside the fresh view
             convertView.setTag(viewHolder);
         } else {
