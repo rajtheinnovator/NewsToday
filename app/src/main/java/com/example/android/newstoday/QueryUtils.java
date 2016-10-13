@@ -128,9 +128,11 @@ public class QueryUtils {
         // Create an empty ArrayList that we can start adding newses to
         ArrayList<News> newses = new ArrayList<>();
 
-        // Try to parse the SAMPLE_JSON_RESPONSE. If there's a problem with the way the JSON
-        // is formatted, a JSONException exception object will be thrown.
-        // Catch the exception so the app doesn't crash, and handle exception.
+        /*
+        Try to parse the SAMPLE_JSON_RESPONSE. If there's a problem with the way the JSON
+        is formatted, a JSONException exception object will be thrown.
+        Catch the exception so the app doesn't crash, and handle exception.
+        */
         try {
             // TODO: Parse the response given by the jsonResponse string
 

@@ -27,8 +27,6 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
     ListView newsListView;
     TextView mEmptyStateTextView;
     NewsAdapter newsAdapter;
-    // display error
-    //  TextView mEmptyStateTextView = (TextView) findViewById(R.id.empty_view);
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -61,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
                     //know what was the status of the app, i.e, was it the first click or not
                     int SEARCH_BEFORE_OR_AFTER_FIRST_CLICK = 1;
+
                     //Handle the loader manager as per the the button and view selected
                     clickHandle(searchQueried, SEARCH_BEFORE_OR_AFTER_FIRST_CLICK);
                 }
@@ -73,6 +72,7 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
 
         //Set click Listener on Search Button Click
         searchButtonAfterFirstSearch.setOnClickListener(new View.OnClickListener() {
+
             @Override
             public void onClick(View view) {
                 //Find the edit text's actual text and make it compatible for a url search query
@@ -169,9 +169,9 @@ public class MainActivity extends AppCompatActivity implements LoaderManager.Loa
         View loadingIndicator = findViewById(R.id.loading_indicator);
         loadingIndicator.setVisibility(View.GONE);
 
-        // Clear the adapter of previous earthquake data
-        // earthquakeAdapter.clear();
-        // If there is no result, do nothing.
+        /*
+       If no news is found then simply show an empty view
+        */
 
         if (newses.isEmpty()) {
             mEmptyStateTextView = (TextView) findViewById(R.id.empty_view);
