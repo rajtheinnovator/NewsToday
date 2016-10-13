@@ -35,11 +35,7 @@ public class QueryUtils {
      * Query the GUARDIAN dataset and return an {@link News} ArrayList to represent a single news.
      */
     public static ArrayList<News> fetchNewsData(String requestUrl) {
-        try {
-            Thread.sleep(2000);
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        }
+     
         // Create URL object
         URL url = createUrl(requestUrl);
 
